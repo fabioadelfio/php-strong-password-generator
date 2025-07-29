@@ -1,8 +1,26 @@
 <?php
 
-function generatePassword($length)
+function generatePassword($length, $useLowercase, $useUppercase, $useNumbers, $useSymbols)
 {
-    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+    $characters = '';
+
+    if ($useLowercase) {
+        $characters .= 'abcdefghijklmnopqrstuvwxyz';
+    }
+    if ($useUppercase) {
+        $characters .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    }
+    if ($useNumbers) {
+        $characters .= '0123456789';
+    }
+    if ($useSymbols) {
+        $characters .= '!@#$%^&*()-_=+[]{}|;:,.<>?';
+    }
+
+    if ($characters === '') {
+        return 'Errore: Nessun set di caratteri selezionato.';
+    }
+
     $password = '';
     $maxIndex = strlen($characters) - 1;
 
@@ -11,13 +29,4 @@ function generatePassword($length)
     }
 
     return $password;
-}
-
-// Recupero la lunghezza della password richiesta
-
-$passwordLength = isset($_GET['length']) ? (int) $_GET['length'] : 0;
-$generatedPassword = '';
-
-if ($passwordLength > 0) {
-    $generatedPassword = generatePassword($passwordLength);
 }

@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require_once __DIR__ . '/functions.php';
 
@@ -6,8 +7,24 @@ require_once __DIR__ . '/functions.php';
 $passwordLength = isset($_GET['length']) ? (int) $_GET['length'] : 0;
 $generatedPassword = '';
 
+$useLowercase = isset($_GET['lowercase']);
+$useUppercase = isset($_GET['uppercase']);
+$useNumbers = isset($_GET['numbers']);
+$useSymbols = isset($_GET['symbols']);
+
 if ($passwordLength > 0) {
-    $generatedPassword = generatePassword($passwordLength);
+    $generatedPassword = generatePassword(
+        $passwordLength,
+        $useLowercase,
+        $useUppercase,
+        $useNumbers,
+        $useSymbols
+    );
+
+    $_SESSION['generated_password'] = $generatedPassword;
+
+    header("Location: result.php");
+    exit;
 }
 
 ?>
@@ -24,13 +41,17 @@ if ($passwordLength > 0) {
 
 <body>
     <div class="container d-flex flex-column align-items-center">
-        <h1 class="text-center my-3">Password Generator</h1>
+        <h1 class="text-center my-3">Strong Password Generator</h1>
         <form method="GET">
             <div class="form-group text-center">
-                <label class="fs-4">Password Length</label>
+                <label class="fs-4">Lunghezza Password</label>
                 <br>
                 <input type="number" name="length" id="length" class="form-control text-center mb-3" min="4" max="20" placeholder="4 - 20" required>
-                <button type="submit" class="btn btn-success fs-4">Generate Password</button>
+                <label><input type="checkbox" name="lowercase" checked> Lettere minuscole</label><br>
+                <label><input type="checkbox" name="uppercase" checked> Lettere maiuscole</label><br>
+                <label><input type="checkbox" name="numbers" checked> Numeri</label><br>
+                <label><input type="checkbox" name="symbols" checked> Simboli</label><br>
+                <button type="submit" class="btn btn-success fs-4">Genera Password</button>
             </div>
         </form>
     </div>
