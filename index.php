@@ -1,3 +1,29 @@
+<?php
+
+function generatePassword($length)
+{
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+    $password = '';
+    $maxIndex = strlen($characters) - 1;
+
+    for ($i = 0; $i < $length; $i++) {
+        $password .= $characters[random_int(0, $maxIndex)];
+    }
+
+    return $password;
+}
+
+// Recupero la lunghezza della password richiesta
+
+$passwordLength = isset($_GET['length']) ? (int) $_GET['length'] : 0;
+$generatedPassword = '';
+
+if ($passwordLength > 0) {
+    $generatedPassword = generatePassword($passwordLength);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,10 +41,19 @@
             <div class="form-group text-center">
                 <label class="fs-4">Password Length</label>
                 <br>
-                <input type="number" name="length" id="length" class="form-control text-center mb-3" min="7" max="20" placeholder="4 - 20" required>
+                <input type="number" name="length" id="length" class="form-control text-center mb-3" min="4" max="20" placeholder="4 - 20" required>
                 <button type="submit" class="btn btn-success fs-4">Generate Password</button>
             </div>
         </form>
+    </div>
+    <div class="container text-center password my-5">
+        <h1>
+            <?php
+            if ($generatedPassword) {
+                echo 'Generated Password: <strong>' . $generatedPassword . '</strong>';
+            }
+            ?>
+        </h1>
     </div>
 </body>
 
